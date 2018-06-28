@@ -1,0 +1,9 @@
+version: '2'
+services:
+  app_no_lock:
+    image: gcc
+    volumes:
+      - ./app:/app
+      - ./shared_file/:/app/shared_file/
+    working_dir: /app
+    command: bash ./app.sh
