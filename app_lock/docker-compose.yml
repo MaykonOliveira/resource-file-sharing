@@ -6,4 +6,4 @@ services:
       - ./app:/app
       - ./shared_file/:/shared_file/
     working_dir: /app
-    command: bash /app/app.sh
+    command: bash ./app.sh
