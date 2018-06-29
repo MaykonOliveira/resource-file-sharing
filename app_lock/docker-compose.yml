@@ -1,6 +1,20 @@
 version: '2'
 services:
-  app_lock:
+  app_lock_1:
+    image: gcc
+    volumes:
+      - ./app:/app
+      - ./shared_file/:/shared_file/
+    working_dir: /app
+    command: bash ./app.sh
+  app_lock_2:
+    image: gcc
+    volumes:
+      - ./app:/app
+      - ./shared_file/:/shared_file/
+    working_dir: /app
+    command: bash ./app.sh
+  app_lock_3:
     image: gcc
     volumes:
       - ./app:/app
