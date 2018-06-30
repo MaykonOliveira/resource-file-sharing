@@ -1,13 +1,38 @@
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <sys/file.h>
 
-int main(){
-   int cont = 0;  
-   while(cont < 10){
-   	  sleep(1);
-   	  printf("%d\n", cont);
-      cont++;
-   }
-   return 0;
+#include <time.h>
+#include <sys/time.h>
+
+#define N 5
+
+int main()
+{
+    char hostname[1024];
+    gethostname(hostname, 1024);
+    int n = N;
+
+    FILE *arq;
+    char c;
+    arq = fopen("/shared_file/file.txt", "a+");
+    flock(fileno(arq), LOCK_EX);
+    if (!arq){
+        perror("Arquivo inexistente");
+        exit(0);
+    }
+
+    while(n--){
+        struct timeval uSec;
+        time_t current_time = time(0);
+        gettimeofday(&uSec, NULL);
+        struct tm *current = localtime(&current_time);  
+        fprintf(arq, "ID da maquina: %s - Hora: %d:%d:%d\n", hostname, current->tm_hour, current->tm_min, current->tm_sec);
+        sleep(3);
+    }   
+
+    flock(fileno(arq), LOCK_UN);
+    fclose(arq);
+    return 0;
 }
