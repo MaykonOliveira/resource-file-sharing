@@ -15,24 +15,22 @@ int main()
     int n = N;
 
     FILE *arq;
-    char c;
-    arq = fopen("/shared_file/file.txt", "a+");
-    flock(fileno(arq), LOCK_EX);
-    if (!arq){
-        perror("Arquivo inexistente");
-        exit(0);
-    }
-
+    
     while(n--){
         struct timeval uSec;
         time_t current_time = time(0);
         gettimeofday(&uSec, NULL);
-        struct tm *current = localtime(&current_time);  
+        struct tm *current = localtime(&current_time);
+        arq = fopen("/shared_file/file.txt", "a+");
+        flock(fileno(arq), LOCK_EX);
+        if (!arq){
+            perror("Arquivo inexistente");
+            exit(0);
+        }
         fprintf(arq, "ID da maquina: %s - Hora: %d:%d:%d\n", hostname, current->tm_hour, current->tm_min, current->tm_sec);
         sleep(3);
+        flock(fileno(arq), LOCK_UN);
+        fclose(arq);
     }   
-
-    flock(fileno(arq), LOCK_UN);
-    fclose(arq);
     return 0;
 }
